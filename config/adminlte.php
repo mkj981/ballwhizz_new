@@ -188,35 +188,54 @@ return [
         ['type' => 'fullscreen-widget', 'topnav_right' => true],
         ['type' => 'sidebar-menu-search', 'text' => 'search'],
 
+        // 🏠 Dashboard
         ['text' => 'Dashboard', 'url' => 'admin/dashboard', 'icon' => 'fas fa-tachometer-alt'],
 
-        ['header' => 'MANAGEMENT'],
-        ['text' => 'Roles Management', 'url' => 'admin/roles', 'icon' => 'fas fa-user-shield', 'can' => 'manage-blog'],
-        ['text' => 'Admins', 'url' => 'admin/admins', 'icon' => 'fas fa-users-cog', 'can' => 'manage-blog'],
-        ['text' => 'Users', 'url' => 'admin/users', 'icon' => 'fas fa-users', 'can' => 'manage-pages'],
-        ['text' => 'API Types', 'url' => 'admin/api-types', 'icon' => 'fas fa-code', 'can' => 'manage-pages'],
-        ['text' => 'Continents', 'url' => 'admin/continents', 'icon' => 'fas fa-globe', 'can' => 'manage-pages'],
-        ['text' => 'Countries', 'url' => 'admin/countries', 'icon' => 'fas fa-flag'],
-        ['text' => 'Leagues', 'url' => 'admin/leagues', 'icon' => 'fas fa-trophy'],
-        ['text' => 'Seasons', 'url' => 'admin/seasons', 'icon' => 'fas fa-calendar-alt', 'can' => 'manage-pages'],
-        ['text' => 'Venues', 'url' => 'admin/venues', 'icon' => 'fas fa-landmark', 'can' => 'manage-pages'],
-        ['text' => 'TV Stations', 'url' => 'admin/tv-stations', 'icon' => 'fas fa-tv', 'can' => 'manage-pages'],
-        ['text' => 'Teams', 'url' => 'admin/teams', 'icon' => 'fas fa-futbol', 'can' => 'manage-pages'],
-        ['text' => 'Season Teams', 'url' => 'admin/season-teams', 'icon' => 'fas fa-people-arrows'],
-        ['text' => 'Players', 'url' => 'admin/players', 'icon' => 'fas fa-user-friends'],
-        ['text' => 'Boxes Types', 'url' => 'admin/boxes-types', 'icon' => 'fas fa-gift'],
-        ['text' => 'Card Types', 'url' => 'admin/card-types', 'icon' => 'fas fa-clone'],
-        ['text' => 'Players Cards', 'url' => 'admin/players-cards', 'icon' => 'fas fa-id-card'],
-        ['text' => 'News', 'url' => 'admin/news', 'icon' => 'fas fa-newspaper', 'can' => 'manage-pages'],
-        ['text' => 'Weeks & Months', 'url' => 'admin/weekmonths', 'icon' => 'fas fa-calendar-week', 'can' => 'manage-pages'],
-        ['text' => 'Cards Weeks', 'url' => 'admin/cards-weeks', 'icon' => 'fas fa-calendar-week', 'can' => 'manage-pages'],
-        ['text' => 'Prediction Matches', 'url' => 'admin/prediction-matches', 'icon' => 'fas fa-futbol', 'can' => 'manage-pages'],
-        ['text' => 'Positions', 'url' => 'admin/positions', 'icon' => 'fas fa-user-shield', 'can' => 'manage-pages'],
+        // 👥 USERS SECTION (collapsible)
+        [
+            'text' => 'Users Management',
+            'icon' => 'fas fa-users',
+            'submenu' => [
+                ['text' => 'Roles Management', 'url' => 'admin/roles', 'icon' => 'fas fa-user-shield'],
+                ['text' => 'Admins', 'url' => 'admin/admins', 'icon' => 'fas fa-users-cog'],
+                ['text' => 'Users', 'url' => 'admin/users', 'icon' => 'fas fa-user'],
+            ],
+        ],
 
+        // ⚙️ APP MANAGEMENT SECTION
+        [
+            'text' => 'App Management',
+            'icon' => 'fas fa-cogs',
+            'submenu' => [
+                ['text' => 'API Types', 'url' => 'admin/api-types', 'icon' => 'fas fa-code'],
+                ['text' => 'Positions', 'url' => 'admin/positions', 'icon' => 'fas fa-user-shield'],
+                ['text' => 'Continents', 'url' => 'admin/continents', 'icon' => 'fas fa-globe'],
+                ['text' => 'Countries', 'url' => 'admin/countries', 'icon' => 'fas fa-flag'],
+                ['text' => 'Leagues', 'url' => 'admin/leagues', 'icon' => 'fas fa-trophy'],
+                ['text' => 'Seasons', 'url' => 'admin/seasons', 'icon' => 'fas fa-calendar-alt'],
+                ['text' => 'Season Teams', 'url' => 'admin/season-teams', 'icon' => 'fas fa-people-arrows'],
+                ['text' => 'Teams', 'url' => 'admin/teams', 'icon' => 'fas fa-futbol'],
+                ['text' => 'Venues', 'url' => 'admin/venues', 'icon' => 'fas fa-landmark'],
+                ['text' => 'TV Stations', 'url' => 'admin/tv-stations', 'icon' => 'fas fa-tv'],
+                ['text' => 'News', 'url' => 'admin/news', 'icon' => 'fas fa-newspaper'],
+            ],
+        ],
 
-
-
-
+        // 🎴 CARDS MANAGEMENT SECTION
+        [
+            'text' => 'Cards & Predictions',
+            'icon' => 'fas fa-id-card',
+            'submenu' => [
+                ['text' => 'Boxes Types', 'url' => 'admin/boxes-types', 'icon' => 'fas fa-gift'],
+                ['text' => 'Card Types', 'url' => 'admin/card-types', 'icon' => 'fas fa-clone'],
+                ['text' => 'Ballwhizz Weeks', 'url' => 'admin/weekmonths', 'icon' => 'fas fa-calendar-week'],
+                ['text' => 'Cards Weeks', 'url' => 'admin/cards-weeks', 'icon' => 'fas fa-calendar-alt'],
+                ['text' => 'Prediction Matches', 'url' => 'admin/prediction-matches', 'icon' => 'fas fa-futbol'],
+                ['text' => 'Players', 'url' => 'admin/players', 'icon' => 'fas fa-user-friends'],
+                ['text' => 'Players Cards', 'url' => 'admin/players-cards', 'icon' => 'fas fa-id-card-alt'],
+                ['text' => 'User Cards', 'url' => 'admin/user-cards', 'icon' => 'fas fa-address-card'],
+            ],
+        ],
     ],
 
     /*

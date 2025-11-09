@@ -72,6 +72,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::view('/prediction-matches', 'admin.predictionmatches.index')->name('admin.predictionmatches');
             Route::view('/cards-weeks', 'admin.cardsweeks.index')->name('admin.cardsweeks');
             Route::view('/positions', 'admin.positions.index')->name('admin.positions');
+            Route::view('/user-cards', 'admin.usercards.index')->name('admin.usercards');
+
 
 
 
