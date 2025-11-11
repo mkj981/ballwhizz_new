@@ -66,7 +66,7 @@ return [
             'driver' => 'mysql',
             'host' => env('DB_OLD_HOST', '127.0.0.1'),
             'port' => env('DB_OLD_PORT', '3306'),
-            'database' => env('DB_OLD_DATABASE', 'ballwhizz'),
+            'database' => env('DB_OLD_DATABASE', 'live_bw'),
             'username' => env('DB_OLD_USERNAME', 'root'),
             'password' => env('DB_OLD_PASSWORD', 'marwan1981'),
             'unix_socket' => env('DB_SOCKET', ''),

@@ -26,12 +26,6 @@ class ImportPlayersFromOldDB extends Command
         $validTeams     = DB::table('teams')->pluck('id')->toArray();
 
         foreach ($oldPlayers as $p) {
-            // Skip players with no season_id
-            if (empty($p->season_id)) {
-                $this->warn("⏭️ Skipped Player ID {$p->id} — no season_id.");
-                $skipped++;
-                continue;
-            }
 
             // Skip if already imported
             if (Player::find($p->id)) {

@@ -27,7 +27,7 @@ class UsersTable extends Component
                 ->orWhere('uid', 'like', "%{$this->search}%")
             )
             ->orderByDesc('id')
-            ->paginate(10);
+            ->paginate(15);
 
         return view('livewire.admin.users-table', compact('users'));
     }

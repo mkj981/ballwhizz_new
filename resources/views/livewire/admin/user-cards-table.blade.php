@@ -6,7 +6,7 @@
             <h3 class="card-title mb-0">🃏 User Cards</h3>
             <div class="d-flex align-items-center gap-2">
                 <input wire:model.debounce.500ms="search" type="text" class="form-control form-control-sm"
-                       placeholder="Search by user or card ID...">
+                       placeholder="Search by user or player name...">
                 <button wire:click="$toggle('showCreateForm')" class="btn btn-success btn-sm">
                     {{ $showCreateForm ? '− Cancel' : '➕ Add New' }}
                 </button>
@@ -36,9 +36,11 @@
                         </div>
                         <div class="col-md-3">
                             <select wire:model="card_id" class="form-select form-select-sm">
-                                <option value="">Select Card</option>
+                                <option value="">Select Card / Player</option>
                                 @foreach($cards as $c)
-                                    <option value="{{ $c->id }}">{{ $c->id }}</option>
+                                    <option value="{{ $c->id }}">
+                                        #{{ $c->id }} • {{ $c->player->en_common_name ?? $c->player->en_name ?? 'Unknown' }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -81,14 +83,29 @@
                 <table class="table table-bordered table-hover align-middle mb-0">
                     <thead class="table-dark">
                     <tr>
-                        <th>ID</th>
-                        <th>User</th>
-                        <th>Card</th>
-                        <th>League</th>
-                        <th>Position</th>
+                        <th wire:click="sortBy('user_cards.id')" style="cursor:pointer">
+                            ID {!! $sortField === 'user_cards.id' ? ($sortDirection === 'asc' ? '▲' : '▼') : '' !!}
+                        </th>
+                        <th wire:click="sortBy('user_name')" style="cursor:pointer">
+                            User {!! $sortField === 'user_name' ? ($sortDirection === 'asc' ? '▲' : '▼') : '' !!}
+                        </th>
+                        <th wire:click="sortBy('card_id')" style="cursor:pointer">
+                            Card {!! $sortField === 'card_id' ? ($sortDirection === 'asc' ? '▲' : '▼') : '' !!}
+                        </th>
+                        <th wire:click="sortBy('player_name')" style="cursor:pointer">
+                            Player {!! $sortField === 'player_name' ? ($sortDirection === 'asc' ? '▲' : '▼') : '' !!}
+                        </th>
+                        <th wire:click="sortBy('league_name')" style="cursor:pointer">
+                            League {!! $sortField === 'league_name' ? ($sortDirection === 'asc' ? '▲' : '▼') : '' !!}
+                        </th>
+                        <th wire:click="sortBy('position_name')" style="cursor:pointer">
+                            Position {!! $sortField === 'position_name' ? ($sortDirection === 'asc' ? '▲' : '▼') : '' !!}
+                        </th>
                         <th>Team</th>
                         <th>Sub</th>
-                        <th>In Stad</th>
+                        <th wire:click="sortBy('in_stad')" style="cursor:pointer">
+                            In Stad {!! $sortField === 'in_stad' ? ($sortDirection === 'asc' ? '▲' : '▼') : '' !!}
+                        </th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -96,10 +113,11 @@
                     @forelse($records as $r)
                         <tr>
                             <td>{{ $r->id }}</td>
-                            <td>{{ $r->user->name ?? '—' }}</td>
-                            <td>{{ $r->card_id }}</td>
-                            <td>{{ $r->league->en_name ?? '—' }}</td>
-                            <td>{{ $r->position->en_name ?? '—' }}</td>
+                            <td>{{ $r->user_name ?? '—' }}</td>
+                            <td>#{{ $r->card_id }}</td>
+                            <td>{{ $r->player_name ?? '—' }}</td>
+                            <td>{{ $r->league_name ?? '—' }}</td>
+                            <td>{{ $r->position_name ?? '—' }}</td>
                             <td>{{ $r->is_in_team ? '✅' : '❌' }}</td>
                             <td>{{ $r->is_sub ? '✅' : '❌' }}</td>
                             <td>{{ $r->in_stad }}</td>
@@ -111,7 +129,9 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="9" class="text-center text-muted">No records found.</td></tr>
+                        <tr>
+                            <td colspan="10" class="text-center text-muted">No records found.</td>
+                        </tr>
                     @endforelse
                     </tbody>
                 </table>

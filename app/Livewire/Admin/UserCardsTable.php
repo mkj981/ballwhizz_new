@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\PlayersCard;
 use App\Models\Leagues;
 use App\Models\Positions;
+use Illuminate\Support\Facades\DB;
 
 class UserCardsTable extends Component
 {
@@ -20,7 +21,11 @@ class UserCardsTable extends Component
     public $editingId = null;
     public $showCreateForm = false;
 
-    // form fields
+    // Sorting
+    public $sortField = 'user_cards.id';
+    public $sortDirection = 'desc';
+
+    // Form fields
     public $user_id, $card_id, $league_id, $position_id, $is_in_team = false, $is_sub = false, $in_stad = 0;
 
     protected $rules = [
@@ -33,10 +38,24 @@ class UserCardsTable extends Component
         'in_stad'     => 'integer|min:0',
     ];
 
-    /** reset pagination on search */
-    public function updatingSearch() { $this->resetPage(); }
+    /** 🔍 Reset pagination when search changes */
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
-    /** create new */
+    /** ↕️ Toggle sorting */
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+    }
+
+    /** ➕ Create new record */
     public function store()
     {
         $this->validate();
@@ -55,7 +74,7 @@ class UserCardsTable extends Component
         session()->flash('success', '✅ User card added successfully!');
     }
 
-    /** edit */
+    /** ✏️ Edit record */
     public function edit($id)
     {
         $record = UserCard::findOrFail($id);
@@ -70,7 +89,7 @@ class UserCardsTable extends Component
         $this->showCreateForm = false;
     }
 
-    /** update */
+    /** 💾 Update record */
     public function update()
     {
         $this->validate();
@@ -90,32 +109,45 @@ class UserCardsTable extends Component
         session()->flash('success', '✅ Record updated successfully!');
     }
 
-    /** delete */
+    /** 🗑️ Delete record */
     public function delete($id)
     {
         UserCard::findOrFail($id)->delete();
         session()->flash('success', '🗑️ Record deleted successfully!');
     }
 
+    /** ♻️ Reset form */
     private function resetForm()
     {
-        $this->reset(['editingId','user_id','card_id','league_id','position_id','is_in_team','is_sub','in_stad','showCreateForm']);
+        $this->reset([
+            'editingId', 'user_id', 'card_id', 'league_id', 'position_id',
+            'is_in_team', 'is_sub', 'in_stad', 'showCreateForm'
+        ]);
     }
 
+    /** 🧾 Render table */
     public function render()
     {
-        $records = UserCard::with(['user','card','league','position'])
-            ->when($this->search, fn($q) =>
-            $q->whereHas('user', fn($u) => $u->where('name','like',"%{$this->search}%"))
-                ->orWhereHas('card', fn($c) => $c->where('id',$this->search))
-            )
-            ->orderBy('id','desc')
+        $records = UserCard::query()
+            ->join('players_cards', 'user_cards.card_id', '=', 'players_cards.id')
+            ->join('players', 'players_cards.player_id', '=', 'players.id')
+            ->leftJoin('users', 'user_cards.user_id', '=', 'users.id')
+            ->leftJoin('leagues', 'user_cards.league_id', '=', 'leagues.id')
+            ->leftJoin('positions', 'user_cards.position_id', '=', 'positions.id')
+            ->select('user_cards.*', 'players.en_common_name as player_name', 'users.name as user_name', 'leagues.en_name as league_name', 'positions.en_name as position_name')
+            ->when($this->search, function ($query) {
+                $query->where('users.name', 'like', "%{$this->search}%")
+                    ->orWhere('players.en_common_name', 'like', "%{$this->search}%")
+                    ->orWhere('players.en_name', 'like', "%{$this->search}%")
+                    ->orWhere('user_cards.id', $this->search);
+            })
+            ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(10);
 
         return view('livewire.admin.user-cards-table', [
             'records'   => $records,
             'users'     => User::orderBy('id')->limit(50)->get(),
-            'cards'     => PlayersCard::orderBy('id','desc')->limit(50)->get(),
+            'cards'     => PlayersCard::with('player')->orderBy('id', 'desc')->limit(50)->get(),
             'leagues'   => Leagues::orderBy('en_name')->get(),
             'positions' => Positions::orderBy('id')->get(),
         ]);
