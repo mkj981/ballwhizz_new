@@ -8,6 +8,7 @@
 
 @section('content')
     <livewire:admin.prediction-cards-matches-table />
+
 @stop
 @section('css')
     <style>

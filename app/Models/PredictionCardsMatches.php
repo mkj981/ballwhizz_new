@@ -20,12 +20,17 @@ class PredictionCardsMatches extends Model
         'home_team_result',
         'away_team_result',
         'status',
+        'prediction_calculate',
+        'card_calculate',
     ];
 
     protected $casts = [
         'home_team_result' => 'integer',
         'away_team_result' => 'integer',
         'status' => 'integer',
+        'prediction_calculate' => 'integer',
+        'card_calculate' => 'integer',
+        'starting_at' => 'datetime',
     ];
 
     /*
@@ -55,6 +60,7 @@ class PredictionCardsMatches extends Model
     /** 🔹 Scorers relation */
     public function scorers()
     {
-        return $this->hasMany(PredictionCardsMatchScorer::class, 'match_id', 'id');
+        // ✅ Use correct foreign key name
+        return $this->hasMany(PredictionCardsMatchScorer::class, 'prediction_match_id', 'id');
     }
 }

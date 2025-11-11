@@ -1,4 +1,4 @@
-<div wire:loading.class="opacity-50" wire:target="update,delete,showScorers">
+<div wire:loading.class="opacity-50" wire:target="update,delete,viewScorers">
     <div class="card shadow-sm border-0">
 
         {{-- 🔹 Header --}}
@@ -8,7 +8,7 @@
                 <div class="search-box position-relative">
                     <i class="fas fa-search search-icon"></i>
                     <input wire:model.debounce.500ms="search" type="text" class="form-control form-control-sm ps-4"
-                           placeholder="Search team name...">
+                           placeholder="Search by team name...">
                 </div>
             </div>
         </div>
@@ -47,8 +47,8 @@
                         <tr>
                             <td>{{ $record->id }}</td>
 
+                            {{-- ✏️ Editing Mode --}}
                             @if ($editingId === $record->id)
-                                {{-- ✏️ Editing row --}}
                                 <td>
                                     <select wire:model="league_id" class="form-select form-select-sm">
                                         @foreach ($leagues as $league)
@@ -70,13 +70,11 @@
                                         @endforeach
                                     </select>
                                 </td>
+                                <td><input wire:model="starting_at" type="datetime-local" class="form-control form-control-sm"></td>
                                 <td>
-                                    <input wire:model="starting_at" type="datetime-local" class="form-control form-control-sm">
-                                </td>
-                                <td>
-                                    <input wire:model="home_team_result" class="form-control form-control-sm d-inline-block w-25 text-center" type="number">
+                                    <input wire:model="home_team_result" type="number" class="form-control form-control-sm d-inline-block w-25 text-center">
                                     <span class="mx-1">-</span>
-                                    <input wire:model="away_team_result" class="form-control form-control-sm d-inline-block w-25 text-center" type="number">
+                                    <input wire:model="away_team_result" type="number" class="form-control form-control-sm d-inline-block w-25 text-center">
                                 </td>
                                 <td>
                                     <select wire:model="status" class="form-select form-select-sm">
@@ -101,31 +99,17 @@
                                     <button wire:click="cancelEdit" class="btn btn-secondary btn-sm">✖ Cancel</button>
                                 </td>
                             @else
-                                {{-- 📄 Normal view row --}}
+                                {{-- 📄 Normal View --}}
                                 <td>{{ $record->league->en_name ?? '-' }}</td>
                                 <td>{{ $record->homeTeam->en_name ?? $record->homeTeam->name ?? '-' }}</td>
                                 <td>{{ $record->awayTeam->en_name ?? $record->awayTeam->name ?? '-' }}</td>
-                                <td>
-                                    {{ $record->starting_at ? \Carbon\Carbon::parse($record->starting_at)->format('d M Y, H:i') : '-' }}
-                                </td>
+                                <td>{{ $record->starting_at ? \Carbon\Carbon::parse($record->starting_at)->format('d M Y, H:i') : '-' }}</td>
                                 <td>{{ $record->home_team_result ?? '-' }} - {{ $record->away_team_result ?? '-' }}</td>
-                                <td>
-                                    <span class="badge bg-{{ $record->status ? 'success' : 'warning' }}">
-                                        {{ $record->status ? 'Finished' : 'Pending' }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-{{ $record->prediction_calculate ? 'success' : 'secondary' }}">
-                                        {{ $record->prediction_calculate ? 'Yes' : 'No' }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-{{ $record->card_calculate ? 'success' : 'secondary' }}">
-                                        {{ $record->card_calculate ? 'Yes' : 'No' }}
-                                    </span>
-                                </td>
+                                <td><span class="badge bg-{{ $record->status ? 'success' : 'warning' }}">{{ $record->status ? 'Finished' : 'Pending' }}</span></td>
+                                <td><span class="badge bg-{{ $record->prediction_calculate ? 'success' : 'secondary' }}">{{ $record->prediction_calculate ? 'Yes' : 'No' }}</span></td>
+                                <td><span class="badge bg-{{ $record->card_calculate ? 'success' : 'secondary' }}">{{ $record->card_calculate ? 'Yes' : 'No' }}</span></td>
                                 <td class="text-center">
-                                    <button wire:click="showScorers({{ $record->id }})" class="btn btn-info btn-sm">👟 View</button>
+                                    <button wire:click="viewScorers({{ $record->id }})" class="btn btn-info btn-sm">👟 View</button>
                                 </td>
                                 <td class="text-center">
                                     <button wire:click="edit({{ $record->id }})" class="btn btn-primary btn-sm me-1">✏️</button>
@@ -136,14 +120,13 @@
                             @endif
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="11" class="text-center text-muted py-3">No matches found.</td>
-                        </tr>
+                        <tr><td colspan="11" class="text-center text-muted py-3">No matches found.</td></tr>
                     @endforelse
                     </tbody>
                 </table>
             </div>
 
+            {{-- Pagination --}}
             <div class="d-flex justify-content-center mt-3">
                 {{ $records->links() }}
             </div>
@@ -163,7 +146,7 @@
                     </div>
                     <div class="modal-body">
                         <table class="table table-sm table-striped align-middle">
-                            <thead>
+                            <thead class="table-dark">
                             <tr>
                                 <th>#</th>
                                 <th>Player</th>
@@ -176,10 +159,10 @@
                             @forelse ($selectedMatch->scorers as $scorer)
                                 <tr>
                                     <td>{{ $scorer->id }}</td>
-                                    <td>{{ $scorer->player->en_name ?? $scorer->player->name ?? 'Unknown' }}</td>
+                                    <td>{{ $scorer->player->en_common_name ?? $scorer->player->en_name ?? $scorer->player->name ?? 'Unknown' }}</td>
                                     <td>{{ ucfirst($scorer->team_side) }}</td>
                                     <td>{{ $scorer->minute ?? '-' }}</td>
-                                    <td>{{ $scorer->type ?? '-' }}</td>
+                                    <td>{{ ucfirst($scorer->type ?? '-') }}</td>
                                 </tr>
                             @empty
                                 <tr><td colspan="5" class="text-center text-muted">No scorers yet.</td></tr>

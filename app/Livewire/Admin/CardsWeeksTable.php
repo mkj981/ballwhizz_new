@@ -150,8 +150,8 @@ class CardsWeeksTable extends Component
                 $q->where('week_name', 'like', "%{$this->search}%")
                 );
             })
-            ->orderBy('start', 'desc')
-            ->paginate(10);
+            ->orderBy('week_months_id', 'ASC')
+            ->paginate(15);
 
         return view('livewire.admin.cards-weeks-table', [
             'records'     => $records,

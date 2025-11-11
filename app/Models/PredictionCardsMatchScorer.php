@@ -23,14 +23,22 @@ class PredictionCardsMatchScorer extends Model
         'minute' => 'integer',
     ];
 
-    // 🔹 Relationships
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    /** 🔹 Match Relation */
     public function match()
     {
         return $this->belongsTo(PredictionCardsMatches::class, 'prediction_match_id');
     }
 
+    /** 🔹 Player Relation */
     public function player()
     {
-        return $this->belongsTo(Players::class, 'player_id');
+        // ✅ Must point to Player::class, not Players::class
+        return $this->belongsTo(Player::class, 'player_id');
     }
 }

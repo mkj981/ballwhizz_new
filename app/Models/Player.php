@@ -54,4 +54,9 @@ class Player extends Model
         return $this->hasMany(PredictionCardsMatchScorer::class, 'player_id');
     }
 
+    public function scorers()
+    {
+        return $this->hasMany(PredictionCardsMatchScorer::class, 'player_id');
+    }
+
 }
