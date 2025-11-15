@@ -1,5 +1,7 @@
 <div wire:loading.class="opacity-50">
     <div class="card shadow-sm border-0">
+
+        {{-- Header --}}
         <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
             <h3 class="card-title mb-0">🎴 Players Cards</h3>
             <div class="search-box position-relative">
@@ -9,8 +11,10 @@
             </div>
         </div>
 
+        {{-- Body --}}
         <div class="card-body">
-            {{-- ✅ Success Message --}}
+
+            {{-- Success Message --}}
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show shadow-sm">
                     <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
@@ -24,6 +28,8 @@
                     <tr>
                         <th>#</th>
                         <th>Player</th>
+                        <th>League</th>
+                        <th>Team</th>
                         <th>Card Type</th>
                         <th>Energy</th>
                         <th>Week/Month</th>
@@ -35,7 +41,7 @@
                         <tr>
                             <td>{{ $record->id }}</td>
 
-                            {{-- ✏️ Edit Mode --}}
+                            {{-- Edit Mode --}}
                             @if ($editingId === $record->id)
                                 <td>
                                     <select wire:model="player_id" class="form-select form-select-sm">
@@ -45,6 +51,8 @@
                                         @endforeach
                                     </select>
                                 </td>
+
+                                <td colspan="2" class="text-muted">Auto based on player</td>
 
                                 <td>
                                     <select wire:model="type_id" class="form-select form-select-sm">
@@ -63,9 +71,11 @@
                                     <button wire:click="cancelEdit" class="btn btn-secondary btn-sm">✖ Cancel</button>
                                 </td>
 
-                                {{-- 👁️ View Mode --}}
+                                {{-- View Mode --}}
                             @else
                                 <td>{{ $record->player?->en_common_name ?? '—' }}</td>
+                                <td>{{ $record->player?->league?->en_name ?? '—' }}</td>
+                                <td>{{ $record->player?->team?->en_name ?? '—' }}</td>
                                 <td>{{ $record->type?->en_name ?? '—' }}</td>
                                 <td>{{ $record->energy }}</td>
                                 <td>{{ $record->week_id ?? '—' }}</td>
@@ -77,14 +87,14 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-muted py-3">No player cards found.</td>
+                            <td colspan="8" class="text-muted py-3">No player cards found.</td>
                         </tr>
                     @endforelse
                     </tbody>
                 </table>
             </div>
 
-            {{-- 🔢 Pagination --}}
+            {{-- Pagination --}}
             <div class="d-flex justify-content-center mt-3">
                 {{ $records->links() }}
             </div>

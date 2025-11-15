@@ -236,6 +236,24 @@ return [
                 ['text' => 'User Cards', 'url' => 'admin/user-cards', 'icon' => 'fas fa-address-card'],
             ],
         ],
+
+
+        [
+            'text' => 'Odds',
+            'icon' => 'fas fa-id-card',
+            'submenu' => [
+                ['text' => 'Odds Bookmakers','url'  => 'admin/odds-bookmakers','icon' => 'fas fa-percent', 'can'  => 'manage-pages'],
+                [
+                    'text' => 'Odds Markets',
+                    'url'  => 'admin/odds-markets',
+                    'icon' => 'fas fa-layer-group',
+                    'can'  => 'manage-pages',
+                ],
+            ],
+        ],
+
+
+
     ],
 
     /*

@@ -28,11 +28,13 @@ class PlayersCardsTable extends Component
         'stats' => 'nullable|string',
     ];
 
+    /** 🔄 Reset pagination when searching */
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
+    /** ✏️ Edit mode */
     public function edit($id)
     {
         $record = PlayersCard::findOrFail($id);
@@ -46,35 +48,41 @@ class PlayersCardsTable extends Component
             : $record->stats;
     }
 
+    /** ❌ Cancel editing */
     public function cancelEdit()
     {
         $this->reset(['editingId', 'player_id', 'type_id', 'energy', 'week_id', 'stats']);
     }
 
+    /** 💾 Update record */
     public function update()
     {
         $this->validate();
 
         $record = PlayersCard::findOrFail($this->editingId);
-
         $record->update([
             'player_id' => $this->player_id,
-            'type_id' => $this->type_id,
-            'energy' => $this->energy,
-            'week_id' => $this->week_id,
-            'stats' => $this->stats ? json_decode($this->stats, true) : null,
+            'type_id'   => $this->type_id,
+            'energy'    => $this->energy,
+            'week_id'   => $this->week_id,
+            'stats'     => $this->stats ? json_decode($this->stats, true) : null,
         ]);
 
         $this->cancelEdit();
         session()->flash('success', '🎴 Player Card updated successfully!');
     }
 
+    /** 🎨 Render */
     public function render()
     {
         $players = Player::orderBy('en_common_name', 'asc')->get(['id', 'en_common_name']);
-        $types = CardType::orderBy('id', 'asc')->get(['id', 'en_name']);
+        $types   = CardType::orderBy('id', 'asc')->get(['id', 'en_name']);
 
-        $records = PlayersCard::with(['player', 'type'])
+        $records = PlayersCard::with([
+            'player.team', // 👈 load team
+            'player.league', // 👈 load league
+            'type'
+        ])
             ->when($this->search, function ($q) {
                 $q->whereHas('player', fn($p) =>
                 $p->where('en_common_name', 'like', "%{$this->search}%")
