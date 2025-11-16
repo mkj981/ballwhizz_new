@@ -75,6 +75,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::view('/user-cards', 'admin.usercards.index')->name('admin.usercards');
             Route::view('/odds-bookmakers', 'admin.odds-bookmakers.index')->name('admin.odds-bookmakers');
             Route::view('/odds-markets', 'admin.odds-markets.index')->name('admin.odds-markets');
+            Route::view('/users-rankings', 'admin.users-rankings.index')->name('admin.users-rankings');
+            Route::view('/app-news', 'admin.app-news.index')->name('admin.app-news');
+
 
 
 

@@ -218,6 +218,8 @@ return [
                 ['text' => 'Venues', 'url' => 'admin/venues', 'icon' => 'fas fa-landmark'],
                 ['text' => 'TV Stations', 'url' => 'admin/tv-stations', 'icon' => 'fas fa-tv'],
                 ['text' => 'News', 'url' => 'admin/news', 'icon' => 'fas fa-newspaper'],
+                ['text' => 'App News','url'  => 'admin/app-news','icon' => 'fas fa-newspaper'],
+
             ],
         ],
 
@@ -234,6 +236,12 @@ return [
                 ['text' => 'Players', 'url' => 'admin/players', 'icon' => 'fas fa-user-friends'],
                 ['text' => 'Players Cards', 'url' => 'admin/players-cards', 'icon' => 'fas fa-id-card-alt'],
                 ['text' => 'User Cards', 'url' => 'admin/user-cards', 'icon' => 'fas fa-address-card'],
+                [
+                    'text' => 'User Rankings',
+                    'url'  => 'admin/users-rankings',
+                    'icon' => 'fas fa-chart-line',
+                    'can'  => 'manage-pages',
+                ],
             ],
         ],
 

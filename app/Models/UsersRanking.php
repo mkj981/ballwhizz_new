@@ -16,6 +16,13 @@ class UsersRanking extends Model
         'type',
         'player_id',
         'team_id',
+
+        // NEW FIELDS
+        'home_team_id',
+        'away_team_id',
+        'home_prediction',
+        'away_prediction',
+
         'card_id',
         'points',
         'scorer_list',
@@ -58,5 +65,16 @@ class UsersRanking extends Model
     public function predictionWeek()
     {
         return $this->belongsTo(WeekMonth::class, 'prediction_week_id');
+    }
+
+    // NEW: relationships for home/away teams
+    public function homeTeam()
+    {
+        return $this->belongsTo(Teams::class, 'home_team_id');
+    }
+
+    public function awayTeam()
+    {
+        return $this->belongsTo(Teams::class, 'away_team_id');
     }
 }
